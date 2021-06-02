@@ -27,6 +27,7 @@ struct ProcessInfo
 char cmd[BUFF];
 ProcessInfo listProcess[100];
 int countProcess = 0;
+int check = 0;
 
 string workingdir()
 {
@@ -101,6 +102,7 @@ void addNewProcess(DWORD pid, const char *cmd)
 void sigintHandler(int sig_num)
 {
     closeApp(listProcess[countProcess - 1].pid);
+    check = 1;
 }
 
 void openApp(char *cmd, const char *path, MODE mode)
@@ -121,6 +123,16 @@ void openApp(char *cmd, const char *path, MODE mode)
         {
             signal(SIGINT, sigintHandler);
             WaitForSingleObject(pi.hProcess, INFINITE);
+            
+            if(check==1) 
+            {
+                check = 0;
+            }
+            else{
+                printf("close pid = %u\n", listProcess[countProcess-1].pid);
+                countProcess--;
+            }
+
         }
 
         CloseHandle(pi.hProcess);
