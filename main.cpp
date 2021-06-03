@@ -286,7 +286,8 @@ int main()
         {
             for (int i = 0; i < countProcess; i++)
             {
-                closeApp(listProcess[i].pid);
+                    HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, false, listProcess[i].pid);
+                    TerminateProcess(hProcess, 0);
             }
             exit(0);
         }
